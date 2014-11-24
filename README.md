@@ -1,10 +1,10 @@
 # time-it
 
-FIXME: description
+FIXME: Here goes a little description of what does it do.
 
 ## Installation
 
-Download from http://example.com/FIXME.
+FIXME: Here goes the explanation of how to set it up.
 
 ## Usage
 
@@ -30,7 +30,7 @@ FIXME: listing of options this app accepts.
 
 ## License
 
-Copyright © 2014 FIXME
+Copyright © 2014 @_dictive
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.

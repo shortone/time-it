@@ -1,5 +1,8 @@
 (ns dictive.time-it.core
   (:require [clojure.string :refer [blank?]]
+            [clj-jwt.core :as jwt]
+            [clj-jwt.key :refer [private-key]]
+            [clj-time.core :refer [days now plus]]
             [com.ashafa.clutch :as clutch]
             [compojure.core :refer [defroutes context ANY GET POST OPTIONS]]
             [compojure.handler :as handler]
@@ -9,6 +12,18 @@
             [ring.util.response :refer [resource-response response header status]]))
 
 (def db-users (clutch/get-database "time-it/users"))
+
+#_(def rsa-prv-key (private-key "rsa/private.key" "pass phrase"))
+#_(def ec-prv-key  (private-key "ec/private.key"))
+
+(defn get-user
+  [id & {:keys [by] :or {by :id}}]
+  (case by
+    :id (clutch/get-document db-users id)
+    :email (-> (clutch/get-view db-users "queries" "by_email" {:key id})
+               (first)
+               (:value))
+    nil))
 
 (defn create-new-user
   [{:keys [username password]}]
@@ -20,22 +35,14 @@
                 :type :local}]
       (clutch/put-document db-users user))))
 
-(defn get-user
-  [id]
-  (if-let [user (clutch/get-document db-users id)]
-    (select-keys user [:email :creation-date :type])))
-
-(defn get-user-by-email
-  [email]
-  (-> (clutch/get-view db-users "queries" "by_email" {:key email})
-      (first)
-      (:value)))
-
 (defn get-token
   [email password]
-  (if-let [user (get-user-by-email email)]
+  (if-let [user (get-user email :by :email)]
     (if (bcrypt/check password (:hashed-password user))
-      user)))
+      (let [token {:iss (:email user)
+                   :exp (plus (now) (days 1))
+                   :iat (now)}]
+        {:token (-> token jwt/jwt (jwt/sign :HS512 "secret") jwt/to-str)}))))
 
 (defroutes users-routes
   (OPTIONS "/" [] (-> (response nil)
@@ -52,7 +59,7 @@
            (OPTIONS "/" [] (-> (response nil)
                                (header "Allow" "OPTIONS GET")))
            (GET "/" [] (if-let [user (get-user id)]
-                         (response user)
+                         (response (select-keys user [:_id :email :creation-date :type]))
                          (-> (response nil)
                              (status 404))))
            (ANY "/" []

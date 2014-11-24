@@ -4,11 +4,12 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
-                 [ring/ring-core "1.3.1"]
-                 [ring/ring-json "0.3.1"]
                  [compojure "1.2.1"]
                  [com.ashafa/clutch "0.4.0"]
-                 [crypto-password "0.1.3"]]
+                 [clj-jwt "0.0.11"]
+                 [crypto-password "0.1.3"]
+                 [ring/ring-core "1.3.1"]
+                 [ring/ring-json "0.3.1"]]
   :plugins [[lein-ring "0.8.10"]]
   :ring {:handler dictive.time-it.core/app
          :port 3060

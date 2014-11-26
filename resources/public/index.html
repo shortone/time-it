@@ -1,1 +1,18 @@
-<h2>It is working properly!!!</h2>
+<!doctype html>
+<html ng-app="timeIt">
+    <head>
+        <title>Time It</title>
+        <link rel="stylesheet" href="./css/bootstrap.min.css" />
+        <link rel="stylesheet" href="./css/font-awesome.min.css" />
+        <link rel="stylesheet" href="./css/time-it.css" />
+    </head>
+    <body>
+        <div class="container">
+            <div ng-view></div>
+        </div>
+        <script src="./javascript/vendors/angular.min.js"></script>
+        <script src="./javascript/vendors/angular-resource.min.js"></script>
+        <script src="./javascript/vendors/angular-route.min.js"></script>
+        <script src="./javascript/time-it.js"></script>
+    </body>
+</html>

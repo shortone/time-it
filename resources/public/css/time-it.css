@@ -1,3 +1,15 @@
+@media (min-width:768px) {
+  .navbar {
+    border-radius:0px
+  }
+}
+
+@media (min-width:768px) {
+  .navbar-header {
+    float:left
+  }
+}
+
 #banner {
   min-height:300px;
   border-bottom:none

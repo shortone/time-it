@@ -42,7 +42,8 @@
       (let [token {:iss (:email user)
                    :exp (plus (now) (days 1))
                    :iat (now)}]
-        {:token (-> token jwt/jwt (jwt/sign :HS512 "secret") jwt/to-str)}))))
+        {:token (-> token jwt/jwt (jwt/sign :HS512 "secret") jwt/to-str)
+         :key (:_id user)}))))
 
 (defroutes users-routes
   (OPTIONS "/" [] (-> (response nil)

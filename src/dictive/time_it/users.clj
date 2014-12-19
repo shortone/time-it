@@ -9,9 +9,16 @@
   [stuff]
   (not (blank? stuff)))
 
+(defn retrieve-by-email
+  [email]
+  (-> (clutch/get-view db-users "queries" "by_email" {:key email})
+      (first)
+      (:value)))
+
 (defn- push-creation
   [new-user]
-  (clutch/put-document db-users new-user))
+  (when (nil? (retrieve-by-email (:email new-user)))
+    (clutch/put-document db-users new-user)))
 
 (defn create
   [{:keys [username password]}]
@@ -35,3 +42,13 @@
                 (first)
                 (:value))
      nil)))
+
+(defn retrieve
+  ([id]
+   (clutch/get-document db-users id))
+  ([email password]
+   (if-let [user (-> (clutch/get-view db-users "queries" "by_email" {:key email})
+                     (first)
+                     (:value))]
+     (if (bcrypt/check password (:hashed-password user))
+       user))))
